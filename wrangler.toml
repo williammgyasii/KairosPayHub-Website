@@ -1,5 +1,4 @@
-# Cloudflare Pages deploy (CI + manual wrangler pages deploy)
-account_id = "e23518956f08ff35812d9ab001a39880"
+# Pages deploy — account_id comes from CLOUDFLARE_ACCOUNT_ID in CI
 name = "kairospayhub-marketing"
 compatibility_date = "2024-09-01"
 pages_build_output_dir = "dist"
