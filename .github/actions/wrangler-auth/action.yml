@@ -1,0 +1,49 @@
+name: Wrangler auth
+description: Configure wrangler for CI deploy (OAuth refresh token for Pages; API token optional)
+
+inputs:
+  api_token:
+    description: Cloudflare API token (optional — must include Pages Edit if used)
+    required: false
+  refresh_token:
+    description: Cloudflare wrangler OAuth refresh token (cfort_...)
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Configure wrangler credentials
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        if [[ -n "${{ inputs.refresh_token }}" ]]; then
+          mkdir -p "$HOME/.config/.wrangler/config"
+          cat > "$HOME/.config/.wrangler/config/default.toml" <<EOF
+        oauth_token = "expired"
+        expiration_time = "2020-01-01T00:00:00.000Z"
+        refresh_token = "${{ inputs.refresh_token }}"
+        scopes = [
+          "user:read",
+          "offline_access",
+          "account:read",
+          "workers:write",
+          "pages:write",
+          "zone:read"
+        ]
+        EOF
+          unset CLOUDFLARE_API_TOKEN
+          echo "Using OAuth refresh token for wrangler auth"
+          npx wrangler whoami
+          exit 0
+        fi
+
+        if [[ -n "${{ inputs.api_token }}" ]]; then
+          export CLOUDFLARE_API_TOKEN="${{ inputs.api_token }}"
+          echo "Using CLOUDFLARE_API_TOKEN for wrangler auth"
+          npx wrangler whoami
+          exit 0
+        fi
+
+        echo "Missing Cloudflare credentials: set CLOUDFLARE_WRANGLER_REFRESH_TOKEN or CLOUDFLARE_API_TOKEN"
+        exit 1

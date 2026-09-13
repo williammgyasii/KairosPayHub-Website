@@ -23,8 +23,9 @@ Preview URL: [kairospayhub-marketing.pages.dev](https://kairospayhub-marketing.p
 
 | Secret | Value |
 |--------|--------|
-| `CLOUDFLARE_API_TOKEN` | API token with **Account → Cloudflare Pages → Edit** (and **Account → Account Settings → Read**) |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
+| `CLOUDFLARE_WRANGLER_REFRESH_TOKEN` | Same as KairosPayHub — from `~/Library/Preferences/.wrangler/config/default.toml` after `wrangler login` |
+| `CLOUDFLARE_ACCOUNT_ID` | `e23518956f08ff35812d9ab001a39880` |
+| `CLOUDFLARE_API_TOKEN` | Optional — only if it includes **Cloudflare Pages → Edit** (zone DNS token alone is not enough) |
 
 Custom domains (`www.kairospayhub.com`, `kairospayhub.com`) are configured in Cloudflare Dashboard → **Workers & Pages** → **kairospayhub-marketing** → **Custom domains**. DNS lives in the main KairosPayHub infra repo (`scripts/setup-marketing-dns.sh`).
 
