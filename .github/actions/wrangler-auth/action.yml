@@ -17,6 +17,13 @@ runs:
       run: |
         set -euo pipefail
 
+        if [[ -n "${{ inputs.api_token }}" ]]; then
+          export CLOUDFLARE_API_TOKEN="${{ inputs.api_token }}"
+          echo "Using CLOUDFLARE_API_TOKEN for wrangler auth"
+          npx wrangler whoami
+          exit 0
+        fi
+
         if [[ -n "${{ inputs.refresh_token }}" ]]; then
           mkdir -p "$HOME/.config/.wrangler/config"
           cat > "$HOME/.config/.wrangler/config/default.toml" <<EOF
@@ -34,13 +41,6 @@ runs:
         EOF
           unset CLOUDFLARE_API_TOKEN
           echo "Using OAuth refresh token for wrangler auth"
-          npx wrangler whoami
-          exit 0
-        fi
-
-        if [[ -n "${{ inputs.api_token }}" ]]; then
-          export CLOUDFLARE_API_TOKEN="${{ inputs.api_token }}"
-          echo "Using CLOUDFLARE_API_TOKEN for wrangler auth"
           npx wrangler whoami
           exit 0
         fi
